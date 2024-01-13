@@ -1,0 +1,93 @@
+@startuml
+
+class FairyWorld {
+    + demoTime(factory: FairyWorldThemeFactory): void
+}
+
+interface FairyWorldThemeFactory {
+    + createPoster(): Poster
+    + createStringOfLights(): StringOfLights
+    + createLightShow(): LightShow
+    + createMusicSong(): MusicSong
+    + createMascots(): Mascot[]
+}
+
+class SpringThemeFactory {
+    + createPoster(): Poster
+    + createStringOfLights(): StringOfLights
+    + createLightShow(): LightShow
+    + createMusicSong(): MusicSong
+    + createMascots(): Mascot[]
+}
+
+class HalloweenThemeFactory {
+    + createPoster(): Poster
+    + createStringOfLights(): StringOfLights
+    + createLightShow(): LightShow
+    + createMusicSong(): MusicSong
+    + createMascots(): Mascot[]
+}
+
+class ChristmasThemeFactory {
+    + createPoster(): Poster
+    + createStringOfLights(): StringOfLights
+    + createLightShow(): LightShow
+    + createMusicSong(): MusicSong
+    + createMascots(): Mascot[]
+}
+
+class Poster {
+    - themeDesign: String
+}
+
+class StringOfLights {
+    - RGBLights: RGB[]
+}
+
+class LightShow {
+    - narration(): String
+}
+
+class MusicSong {
+    - song: Song
+}
+
+class Song {
+    - title: String
+    - lyrics: String
+    - length: int
+}
+
+class Mascot {
+    - name: String
+    - height: double
+    - width: double
+    - appearance: String
+    - insidePerson: Person
+}
+
+class Person {
+
+}
+
+class RGB {
+    - red: int
+    - green: int
+    - blue: int
+    + getColor(): String
+}
+
+FairyWorld *-- FairyWorldThemeFactory : use >
+FairyWorldThemeFactory <|..SpringThemeFactory
+FairyWorldThemeFactory <|.. HalloweenThemeFactory
+FairyWorldThemeFactory <|.. ChristmasThemeFactory
+StringOfLights *-- RGB
+SpringThemeFactory *-- Poster
+SpringThemeFactory *-- StringOfLights
+SpringThemeFactory *-- LightShow
+SpringThemeFactory *-- MusicSong
+MusicSong o-- Song
+SpringThemeFactory *-- Mascot
+Mascot o-- Person
+
+@enduml
