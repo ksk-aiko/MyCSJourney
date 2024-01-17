@@ -1,0 +1,88 @@
+@startuml
+class Sandwich {
+    - doughType: String
+    - topping1: String
+    - topping2: String
+    - topping3: String
+    - vegetable1: String
+    - vegetable2: String
+    - vegetable3: String
+    - vegetable4: String
+    - vegetable5: String
+    - sizeCm: double
+    - cheese: boolean
+    - ketchup: boolean
+    - mustard: boolean
+    - mayonnaise: boolean
+    - sauce: String
+    + Sandwich(...)
+    + toString(): String
+}
+
+class SandwichBuilder {
+    - doughType: String
+    - sizeCm: double
+    - topping1: String
+    - topping2: String
+    - topping3: String
+    - vegetable1: String
+    - vegetable2: String
+    - vegetable3: String
+    - vegetable4: String
+    - vegetable5: String
+    - cheese: boolean
+    - ketchup: boolean
+    - mustard: boolean
+    - mayonnaise: boolean
+    - sauce: String
+    + SandwichBuilder()
+    + addDoughType(String): SandwichBuilder
+    + addTopping1(String): SandwichBuilder
+    + addTopping2(String): SandwichBuilder
+    + addTopping3(String): SandwichBuilder
+    + addVegetable1(String): SandwichBuilder
+    + addVegetable2(String): SandwichBuilder
+    + addVegetable3(String): SandwichBuilder
+    + addVegetable4(String): SandwichBuilder
+    + addVegetable5(String): SandwichBuilder
+    + addCheese(): SandwichBuilder
+    + noCheese(): SandwichBuilder
+    + addKetchup(): SandwichBuilder
+    + noKetchup(): SandwichBuilder
+    + addMustard(): SandwichBuilder
+    + noMustard(): SandwichBuilder
+    + addMayo(): SandwichBuilder
+    + noMayo(): SandwichBuilder
+    + addSauce(String): SandwichBuilder
+    + setSize(double): SandwichBuilder
+    + build(): Sandwich
+    + reset(): SandwichBuilder
+}
+
+class FairyWorldSandwichDirector {
+    {static} + chickenAndBacon(SandwichBuilder): SandwichBuilder
+    {static} + steakAndCheese(SandwichBuilder): SandwichBuilder
+    {static} + spicyItalian(SandwichBuilder): SandwichBuilder
+    {static} + tunaAndEgg(SandwichBuilder): SandwichBuilder
+}
+
+class FairyWorld {
+    + orderSandwich(SandwichMenu, SandwichSize): Sandwich
+}
+
+enum SandwichMenu {
+    CHICKEN_AND_BACON
+    STEAK_AND_CHEESE
+    SPICY_ITALIAN
+    TUNA_AND_EGG
+}
+
+enum SandwichSize {
+    FOOTLONG
+    HALF_FOOTLONG
+}
+
+FairyWorld ..> FairyWorldSandwichDirector : uses >>
+FairyWorld --> "1" SandwichBuilder : uses
+SandwichBuilder --> "1" Sandwich : builds
+@enduml
