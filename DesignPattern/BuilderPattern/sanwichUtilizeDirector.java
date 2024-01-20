@@ -4,6 +4,8 @@ class Sandwich {
     private String topping1;
     private String topping2;
     private String topping3;
+    // チーズのトッピングを追加
+    private String topping4;
     private String vegetable1;
     private String vegetable2;
     private String vegetable3;
@@ -17,12 +19,13 @@ class Sandwich {
     private boolean mayonnaise;
     private String sauce;
 
-    public Sandwich(String doughType, double sizeCm, String topping1, String topping2, String topping3, String vegetable1, String vegetable2, String vegetable3, String vegetable4, String vegetable5, boolean cheese, boolean ketchup, boolean mustard, boolean mayonnaise, String sauce){
+    public Sandwich(String doughType, double sizeCm, String topping1, String topping2, String topping3, String topping4, String vegetable1, String vegetable2, String vegetable3, String vegetable4, String vegetable5, boolean cheese, boolean ketchup, boolean mustard, boolean mayonnaise, String sauce){
         this.doughType = doughType;
         this.sizeCm = sizeCm;
         this.topping1 = topping1;
         this.topping2 = topping2;
         this.topping3 = topping3;
+        this.topping4 = topping4;
         this.vegetable1 = vegetable1;
         this.vegetable2 = vegetable2;
         this.vegetable3 = vegetable3;
@@ -35,10 +38,22 @@ class Sandwich {
         this.sauce = sauce;
     }
 
+    // すでにチーズがあれば、チーズを追加するメソッド
+    public Sandwich addCheese(String cheese) {
+        if (this.cheese) {
+            this.topping4 = cheese;
+            return this;
+        } else {
+            System.out.println("Sorry, you can't add cheese to this sandwich.");
+            return this;
+        }
+    }
+
     public String toString(){
         String sandwich = this.doughType + " bread, size " + this.sizeCm + "cm with " + this.topping1 + ", ";
         if(this.topping2 != null) sandwich+=this.topping2 + ", ";
         if(this.topping3 != null) sandwich+=this.topping3 + ", ";
+        if(this.topping4 != null) sandwich+=this.topping4 + ", ";
         if(this.vegetable1 != null) sandwich+=this.vegetable1 + ", ";
         if(this.vegetable2 != null) sandwich+=this.vegetable2 + ", ";
         if(this.vegetable3 != null) sandwich+=this.vegetable3 + ", ";
@@ -64,6 +79,7 @@ class SandwichBuilder {
     private String topping1;
     private String topping2;
     private String topping3;
+    private String topping4;
     private String vegetable1;
     private String vegetable2;
     private String vegetable3;
@@ -98,6 +114,17 @@ class SandwichBuilder {
     public SandwichBuilder addTopping3(String topping) {
         this.topping3 = topping;
         return this;
+    }
+
+    // チーズのトッピングを追加するメソッド。
+    public SandwichBuilder addTopping4(String cheese) {
+        if (this.cheese) {
+            this.topping4 = cheese;
+            return this;
+        } else {
+            System.out.println("Sorry, you can't add cheese to this sandwich.");
+            return this;
+        }
     }
 
     public SandwichBuilder addVegetable1(String vegetable) {
@@ -176,7 +203,7 @@ class SandwichBuilder {
     }
 
     public Sandwich build() {
-        Sandwich s = new Sandwich(this.doughType, this.sizeCm, this.topping1, this.topping2, this.topping3, this.vegetable1, this.vegetable2, this.vegetable3, this.vegetable4, this.vegetable5, this.cheese, this.ketchup, this.mustard, this.mayonnaise, this.sauce);
+        Sandwich s = new Sandwich(this.doughType, this.sizeCm, this.topping1, this.topping2, this.topping3, this.topping4, this.vegetable1, this.vegetable2, this.vegetable3, this.vegetable4, this.vegetable5, this.cheese, this.ketchup, this.mustard, this.mayonnaise, this.sauce);
         this.reset();
         return s;
     }
@@ -187,6 +214,7 @@ class SandwichBuilder {
         this.topping1 = DEFAULT_TOPPING1;
         this.topping2 = null;
         this.topping3 = null;
+        this.topping4 = null;
         this.vegetable1 = null;
         this.vegetable2 = null;
         this.vegetable3 = null;
@@ -203,9 +231,9 @@ class SandwichBuilder {
 
 // ビルダーのためのメニューを作成
 enum SandwichMenu {
-    CHIKEN_AND_BACON,
+    CHICKEN_AND_BACON,
     STEAK_AND_CHEESE,
-    SPIICY_ITALIAN,
+    SPICY_ITALIAN,
     TUNA_AND_EGG,
 }
 
@@ -279,13 +307,13 @@ class FairyWorld {
     public Sandwich orderSandwich(SandwichMenu item, SandwichSize itemSize) {
         SandwichBuilder builder = new SandwichBuilder();
         switch(item) {
-            case CHIKEN_AND_BACON:
+            case CHICKEN_AND_BACON:
                 FairlyWorldSandwichDirector.chickenAndBacon(builder);
                 break;
             case STEAK_AND_CHEESE:
                 FairlyWorldSandwichDirector.steakAndCheese(builder);
                 break;
-            case SPIICY_ITALIAN:
+            case SPICY_ITALIAN:
                 FairlyWorldSandwichDirector.spicyItalian(builder);
                 break;
             case TUNA_AND_EGG:
@@ -303,5 +331,19 @@ class FairyWorld {
         }
 
         return builder.build();
+    }
+}
+
+class Main{
+    public static void main(String[] args){
+        FairyWorld fairyWorld = new FairyWorld();
+
+        Sandwich chickenAndBacon = fairyWorld.orderSandwich(SandwichMenu.CHICKEN_AND_BACON, SandwichSize.FOOTLONG);
+
+        String endl = System.lineSeparator();
+        System.out.println(chickenAndBacon + endl);
+        System.out.println(fairyWorld.orderSandwich(SandwichMenu.STEAK_AND_CHEESE, SandwichSize.FOOTLONG) + endl);
+        System.out.println(fairyWorld.orderSandwich(SandwichMenu.SPICY_ITALIAN, SandwichSize.HALF_FOOTLONG) + endl);
+        System.out.println(fairyWorld.orderSandwich(SandwichMenu.TUNA_AND_EGG, SandwichSize.FOOTLONG) + endl);
     }
 }
