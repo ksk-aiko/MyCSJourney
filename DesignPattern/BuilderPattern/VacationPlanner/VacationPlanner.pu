@@ -1,0 +1,87 @@
+@startuml
+class VacationInvoice {
+    - startDate : String
+    - endDate : String
+    - totalPeople : int
+    - hotelDays : int
+    - hotelType : String
+    - fairyWorldDays : int
+    - adultFastPass : boolean
+    - kidsFastPass : boolean
+    - arcadePass : boolean
+    - vipTours : boolean[]
+    - mealsRegular : boolean[]
+    - mealsFineDining : boolean[]
+    - photoshoot : boolean
+    - totalAmount : double
+
+    + VacationInvoice()
+    + getStartDate() : String
+    + setStartDate(startDate : String) : void
+    + getEndDate() : String
+    + setEndDate(endDate : String) : void
+    + getTotalPeople() : int
+    + setTotalPeople(totalPeople : int) : void
+    + getHotelDays() : int
+    + setHotelDays(hotelDays : int) : void
+    + getHotelType() : String
+    + setHotelType(hotelType : String) : void
+    + getFairyWorldDays() : int
+    + setFairyWorldDays(fairyWorldDays : int) : void
+    + isAdultFastPass() : boolean
+    + setAdultFastPass(adultFastPass : boolean) : void
+    + isKidsFastPass() : boolean
+    + setKidsFastPass(kidsFastPass : boolean) : void
+    + isArcadePass() : boolean
+    + setArcadePass(arcadePass : boolean) : void
+    + getVipTours() : boolean[]
+    + setVipTour(index : int, value : boolean) : void
+    + getMealsRegular() : boolean[]
+    + setMealRegular(index : int, value : boolean) : void
+    + getMealsFineDining() : boolean[]
+    + setMealFineDining(index : int, value : boolean) : void
+    + isPhotoshoot() : boolean
+    + setPhotoshoot(photoshoot : boolean) : void
+    + getTotalAmount() : double
+    + getStayCost() : double
+    + getPassCost() : double
+    + getTourCost() : double
+    + calculateTotalAmount() : double
+    + toString() : String
+}
+
+class VacationInvoiceBuilder {
+    - invoice : VacationInvoice
+
+    + VacationInvoiceBuilder()
+    + setStartDate(startDate : String) : VacationInvoiceBuilder
+    + setEndDate(endDate : String) : VacationInvoiceBuilder
+    + setTotalPeople(totalPeople : int) : VacationInvoiceBuilder
+    + setHotelDays(hotelDays : int) : VacationInvoiceBuilder
+    + setHotelType(hotelType : String) : VacationInvoiceBuilder
+    + setFairyWorldDays(fairyWorldDays : int) : VacationInvoiceBuilder
+    + setAdultFastPass(adultFastPass : boolean) : VacationInvoiceBuilder
+    + setKidsFastPass(kidsFastPass : boolean) : VacationInvoiceBuilder
+    + setArcadePass(arcadePass : boolean) : VacationInvoiceBuilder
+    + setVipTour(index : int, value : boolean) : VacationInvoiceBuilder
+    + setMealRegular(index : int, value : boolean) : VacationInvoiceBuilder
+    + setMealFineDining(index : int, value : boolean) : VacationInvoiceBuilder
+    + setPhotoshoot(photoshoot : boolean) : VacationInvoiceBuilder
+    + build() : VacationInvoice
+}
+
+class VacationDirector {
+    + coupleWeekendRetreat() : VacationInvoiceBuilder
+    + familyWeekendRetreat() : VacationInvoiceBuilder
+    + familyWeekDeluxe() : VacationInvoiceBuilder
+}
+
+class FairyWorld {
+    + requestInvoice(builder : VacationInvoiceBuilder) : void
+}
+
+
+VacationInvoiceBuilder "1" -- "1" VacationInvoice : builds >
+FairyWorld --> VacationInvoiceBuilder : uses >
+VacationDirector *-- VacationInvoiceBuilder
+@enduml
