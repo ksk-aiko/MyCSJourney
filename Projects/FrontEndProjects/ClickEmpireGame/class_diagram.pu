@@ -1,0 +1,61 @@
+@startuml
+class User {
+    - name: String
+    - age: int
+    - balance: double
+    - inventory: List<Item>
+}
+
+class Item {
+    - name: String
+    - price: double
+    - revenuePerSecond: double
+}
+
+class GameManager {
+    - user: User
+    - manageGameProgress(): void
+}
+
+class AssetManager {
+    - user: User
+    - buyItem(item: Item): void
+    - upgradeItem(item: Item): void
+}
+
+class TimeManager {
+    - currentTime: int
+    - updateTime(): void
+    - updateUserAge(): void
+}
+
+class UIManager {
+    - displayUserInterface(): void
+    - handleUserInput(): void
+}
+
+class Economy {
+    - calculateIncome(): double
+    - updateBalance(): void
+}
+
+class SaveManager {
+    - saveGameData(): void
+    - loadGameData(): void
+}
+
+class AchievementManager {
+    - checkAchievements(): void
+    - rewardUser(): void
+}
+
+User -- GameManager
+User -- AssetManager
+User -- Economy
+GameManager -- TimeManager
+GameManager -- UIManager
+GameManager -- SaveManager
+GameManager -- AchievementManager
+AssetManager -- Economy
+UIManager -- AssetManager
+@enduml
