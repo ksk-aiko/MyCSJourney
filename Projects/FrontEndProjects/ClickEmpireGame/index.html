@@ -1,57 +1,134 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <!-- メタタグ -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
-        <!-- fontawesome -->
-        <link href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" rel="stylesheet">
-    
-        <!-- CSS -->
-        <link rel="stylesheet" href="styles.css">
-    
-        <title>Click Empire Game</title>
-    </head>
-<body>
-    <div class="container-fluid vh-100 bg-dark text-white d-flex">
-        <div class="left-window col-5 d-flex flex-column">
-            <div class="burger-counter-display col-3">
-                <h1>Test text</h1>
-            </div>
-            <div class="burger-image col-9">
-                <img src="image/DALL·E 2024-02-07 16.06.26 - colorful and inviting illustration of a cartoon-style hamburger with vibrant details, making it look appealing and clickable for a game where clicking.webp">
-            </div>
+  <head>
+    <!-- メタタグ -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <!-- fontawesome -->
+    <link
+      href="https://use.fontawesome.com/releases/v5.13.0/css/all.css"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <title>Click Empire Game</title>
+  </head>
+  <body>
+    <div class="container-fluid vh-100 text-white d-flex">
+      <div class="left-window col-5 d-flex flex-column bg-dark my-5">
+        <div class="burger-counter-display info-display h-25">
+          <h2 class="m-3"></h2>
+          <h3>$25 per second</h3>
         </div>
-        <div class="right-window col-7 d-flex flex-column">
-            <div class="user-info d-flex flex-wrap w-100">
-                <div class="user-name col-6">
-                    <h1>Test text</h1>
-                </div>
-                <div class="user-age col-6">
-                    <h1>Test text</h1>
-                </div>
-                <div class="elapsed-days col-6">
-                    <h1>Test text</h1>
-                </div>
-                <div class="assets col-6">
-                    <h1>Test text</h1>
-                </div>
-            </div>
-            <div class="item-info col-10">
-                <div class="item-list">
-                    <h1>Test text</h1>
-                </div>
-            </div>
-            <div class="buttons col-3 mt-auto align-self-end">
-                <button>test</button>
-                <button>test</button>
-            </div>
+        <div
+          class="burger-image d-flex justify-content-center align-items-center h-75"
+        >
+          <img
+            src="image/DALL·E 2024-02-20 17.01.31 - photo-realistic close-up illustration of a delicious, juicy hamburger on a serving tray over the counter in a hamburger shop. The focus is on the hamb.webp"
+          />
         </div>
+      </div>
+      <div class="right-window col-7 d-flex flex-column my-5">
+        <div class="container user-info bg-dark">
+          <div class="d-flex flex-row">
+            <div class="user-name user-info-display col-6">
+              <h1>Test text</h1>
+            </div>
+            <div class="user-age user-info-display col-6">
+              <h1>Test text</h1>
+            </div>
+          </div>
+          <div class="d-flex flex-row">
+            <div class="elapsed-days user-info-display col-6">
+              <h1>Test text</h1>
+            </div>
+            <div class="assets user-info-display col-6">
+              <h1>Test text</h1>
+            </div>
+          </div>
+        </div>
+        <div class="item-info container bg-dark my-3">
+          <div class="item-list">
+            <div class="my-3 item-info-display">
+                <div class="container row d-flex justify-content-between align-items-center p-3">
+                    <img class="card-img-top img-small" src="image/DALL·E 2024-03-02 12.42.58 - photo-realistic illustration of a cozy home, capturing the essence of warmth and comfort with visible architectural details and a welcoming entrance. .webp" alt="">
+                    <div class="d-flex flex-column mx-5 justify-content-around align-items-start">
+                        <div class="item-name">
+                            <h1>House</h1>
+                        </div>
+                        <div class="item-price">
+                            <h2>$20,000,000</h2>
+                        </div>
+                    </div>
+                        <div class="item-money">
+                            <h2>+$32,000 / sec</h2>
+                        </div>
+                        <div class="count">
+                            <h1>0</h1>
+                        </div>
+                </div>
+            </div>
+            <div class="my-3 item-info-display">
+                <div class="container row d-flex justify-content-between align-items-center p-3">
+                    <img src="image/DALL·E 2024-03-02 12.43.17 - photo-realistic illustration of a modern apartment building, reflecting contemporary urban living with clean lines, large windows, and a sense of comm.webp" alt="" class="card-img-top img-small">
+                    <div class="d-flex flex-column mx-5 justify-content-around align-items-start">
+                        <div class="item-name">
+                            <h1>Mansion</h1>
+                        </div>
+                        <div class="item-price">
+                            <h2>$250,000,000</h2>
+                        </div>
+                    </div>
+                    <div class="item-money">
+                        <h2>$50,000 / sec</h2>
+                    </div>
+                    <div class="count">
+                        <h1>0</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="my-3 item-info-display">
+                <div class="container row d-flex justify-content-between align-items-center p-3">
+                    <img src="image/DALL·E 2024-03-02 12.44.34 - photo-realistic illustration of a charming lemonade stand, looking inviting with bright colors and details like fresh lemons, a pitcher of lemonade, a.webp" alt="" class="card-img-top img-small">
+                    <div class="d-flex flex-column mx-5 justify-content-around align-items-start">
+                        <div class="item-name">
+                            <h1>Lemonade Stand</h1>
+                        </div>
+                        <div class="item-price">
+                            <h2>$30,000</h2>
+                        </div>
+                    </div>
+                        <div class="item-money">
+                            <h2>+$30 / sec</h2>
+                        </div>
+                        <div class="count">
+                            <h1>0</h1>
+                        </div>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="buttons col-3 mt-auto align-self-end">
+          <button>test</button>
+          <button>test</button>
+        </div>
+      </div>
     </div>
     <script src="main.js"></script>
-</body>
+  </body>
 </html>

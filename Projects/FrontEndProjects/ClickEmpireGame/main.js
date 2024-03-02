@@ -10,7 +10,7 @@ class UIManager {
     }
 
     updateBurgerCount() {
-        document.querySelector('.burger-counter-display').textContent = `${this.burgerCount} Burgers`;
+        document.querySelector('.burger-counter-display h2').textContent = `${this.burgerCount} Burgers`;
     }
 
     setClickEvent() {
