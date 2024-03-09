@@ -22,6 +22,11 @@ img {
     margin: 30px;
 }
 
+.item-info {
+    height:80vh;
+    overflow: scroll;
+}
+
 .user-info-display {
     background-color: rgba(74, 89, 114);
     margin: 5px;
