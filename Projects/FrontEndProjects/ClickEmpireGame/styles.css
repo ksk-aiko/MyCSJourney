@@ -39,8 +39,19 @@ img {
     text-align: center;
 }
 
+.item-info-display:hover {
+    border: solid 5px rgb(5, 161, 230);
+    cursor: pointer;
+}
+
 .img-small {
     width: 150px;
+    height: auto;
+    margin-left: 1rem;
+}
+
+.img-large {
+    width: 300px;
     height: auto;
     margin-left: 1rem;
 }
