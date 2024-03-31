@@ -2,6 +2,7 @@ class UIManager {
   constructor(user) {
     this.user = user;
     this.burgerCount = 0;
+    this.currentView = "itemList"
   }
 
   increaseBurgerCount() {
@@ -75,6 +76,9 @@ class UIManager {
             </div>
               </form>
         `;
+
+        this.currentView = "itemDetail";
+
         // 購入数の入力欄に入力があった場合のイベントを設定
         document
           .getElementById("purchase-number")
@@ -98,6 +102,7 @@ class UIManager {
           .addEventListener("click", (event) => {
             event.preventDefault();
             this.displayCanPurchaseItems(items);
+            this.currentView = "itemList";
           });
 
         // 購入ボタンが押された場合のイベントを設定
@@ -108,7 +113,11 @@ class UIManager {
           );
           const itemPrice = items[itemIndex].price;
           const totalPurchasePrice = purchaseNumber * itemPrice;
-
+          
+          if (this.user.assetsHeld[itemIndex] >= items[itemIndex].maxPurchase) {
+            alert("You have reached the maximum purchase limit!");
+            return;
+          }
           if (this.user.assets >= totalPurchasePrice) {
             this.user.assets -= totalPurchasePrice;
             this.user.updateAssets();
@@ -117,9 +126,39 @@ class UIManager {
           } else {
             alert("You don't have enough money!");
           }
+
+          this.currentView = "itemList";
         });
       });
     });
+  }
+
+  setButtonClickEvent() {
+    document.getElementById("save-button").addEventListener("click", () => {
+      // ユーザーに本当に保存してもよいか確認する
+      if (!confirm("ゲームデータを保存します。よろしいですか？")) {
+        return;
+      }
+
+      const saveManager = new SaveManager(this.user);
+      saveManager.saveData();
+    });
+
+    document.getElementById("load-button").addEventListener("click", () => {
+      // ユーザーに本当にロードしてもよいか確認する
+      if (!confirm("ゲームデータをロードします。よろしいですか？")) {
+        return;
+      }
+      
+      const saveManager = new SaveManager(this.user);
+      saveManager.loadSaveData();
+      this.user.displayDefaultUserName();
+      this.user.displayDefaultUserAge();
+      this.user.displayDefaultDays();
+      this.user.displayDefaultAssets();
+      this.displayCanPurchaseItems(game.ITEMS);
+    }
+    );
   }
 
   displayCanPurchaseItems(items) {
@@ -130,6 +169,12 @@ class UIManager {
     itemArea.innerHTML = "";
     let itemInfo = document.createElement("div");
     itemInfo.classList.add("my-3", "bg-dark", "item-area");
+    itemInfo.innerHTML = `
+    <div class="d-flex justify-content-center">
+      <h1>Items you can purchase</h1>
+    </div>
+    `
+    ;
     for (let i = 0; i < displayItems.length; i++) {
       const currentItem = displayItems[i];
       itemInfo.innerHTML += `
@@ -156,7 +201,7 @@ class UIManager {
             <h2>+$${currentItem.revenuePerSecond} / sec</h2>
           </div>
           <div class="count">
-            <h1>0</h1>
+            <h1>${this.user.assetsHeld[currentItem.name] || 0}</h1>
           </div>
           </div>
         </div>
@@ -190,6 +235,12 @@ class User {
 
   // ユーザーの年齢を表示する
   displayDefaultUserAge() {
+    document.querySelector("#user-age h1").textContent = this.age + " yrs old";
+  }
+
+  // 1年が経過したら、ユーザーの年齢を更新する
+  updateUserAge() {
+    this.age++;
     document.querySelector("#user-age h1").textContent = this.age + " yrs old";
   }
 
@@ -239,8 +290,9 @@ class User {
   // 資産による1秒あたりの収入を計算する
   calculateAssetsRevenuePerSecond() {
     let totalRevenue = 0;
+    // assetsHeldからkey(文字列として)とvalueを取り出す
     for (const [key, value] of Object.entries(this.assetsHeld)) {
-      totalRevenue += value * game.items[key].revenuePerSecond;
+      totalRevenue += value * game.ITEMS[key].revenuePerSecond;
     }
     return totalRevenue;
   }
@@ -270,14 +322,21 @@ class TimeManager {
     setInterval(() => {
       this.user.assets += this.user.calculateAssetsRevenuePerSecond();
       this.user.days++;
+      // user.daysが365の倍数になったら、年齢を更新する
+      if (this.user.days % 365 == 0) {
+        this.user.updateUserAge();
+      }
       this.user.updateAssets();
       this.user.updateDays();
-      this.checkCanPurchaseItems();
-    }, 500);
+      if (this.uiManager.currentView == "itemDetail") {
+        return;
+      } else {
+        this.checkCanPurchaseItems();
+      }
+    }, 15000);
   }
 
   // itemsの中の各アイテムいづれかの価格を上回ったら、displayCanPurchaseItems()を呼び出す
-  // TODO:新たにアイテムを購入できるようになった時だけ、displayCanPurchaseItems()を呼び出すようにする
   checkCanPurchaseItems() {
     const canPurchaseItems = Object.values(this.items).filter(
       (item) => item.price <= this.user.assets
@@ -288,99 +347,134 @@ class TimeManager {
   }
 }
 
+
 class GameManager {
+  ITEMS = {};
+
   constructor(user) {
     this.user = user;
-    this.items = {}; // Change the items from an array to an object
     this.initializeItems();
   }
 
   initializeItems() {
-    this.items["Flip machine"] = new Item(
-      "Flip machine",
-      "ability",
-      500,
-      15000,
-      2500,
-      "image/house.webp"
-    );
-    this.items["Lemonade Stand"] = new Item(
-      "Lemonade Stand",
-      "realEstate",
-      1000,
-      30000,
-      30,
-      "image/house.webp"
-    );
-    this.items["Ice Cream Truck"] = new Item(
-      "Ice Cream Truck",
-      "realEstate",
-      500,
-      100000,
-      120,
-      "image/house.webp"
-    );
-    this.items["House"] = new Item(
-      "House",
-      "realEstate",
-      100,
-      20000000,
-      32000,
-      "image/house.webp"
-    );
-    this.items["TownHouse"] = new Item(
-      "TownHouse",
-      "realEstate",
-      100,
-      40000000,
-      64000,
-      "image/house.webp"
-    );
-    this.items["Mansion"] = new Item(
-      "Mansion",
-      "realEstate",
-      20,
-      250000000,
-      500000,
-      "image/house.webp"
-    );
-    this.items["Industrial Space"] = new Item(
-      "Industrial Space",
-      "realEstate",
-      10,
-      1000000000,
-      2200000,
-      "image/house.webp"
-    );
-    this.items["Hotel Skyscraper"] = new Item(
-      "Hotel Skyscraper",
-      "realEstate",
-      5,
-      10000000000,
-      25000000,
-      "image/house.webp"
-    );
-    this.items["Bullet-Speed Sky Railway"] = new Item(
-      "Bullet-Speed Sky Railway",
-      "realEstate",
-      1,
-      10000000000000,
-      30000000,
-      "image/house.webp"
-    );
+    this.ITEMS = {
+      "Flip machine": new Item(
+        "Flip machine",
+        "ability",
+        500,
+        15000,
+        2500,
+        "image/FlipMachine.webp"
+      ),
+      "Lemonade Stand": new Item(
+        "Lemonade Stand",
+        "realEstate",
+        1000,
+        30000,
+        30,
+        "image/LemonadeStand.webp"
+      ),
+      "Ice Cream Truck": new Item(
+        "Ice Cream Truck",
+        "realEstate",
+        500,
+        100000,
+        120,
+        "image/iceCream.webp"
+      ),
+      "House": new Item(
+        "House",
+        "realEstate",
+        100,
+        20000000,
+        32000,
+        "image/house.webp"
+      ),
+      "TownHouse": new Item(
+        "TownHouse",
+        "realEstate",
+        100,
+        40000000,
+        64000,
+        "image/townHouse.webp"
+      ),
+      "Mansion": new Item(
+        "Mansion",
+        "realEstate",
+        20,
+        250000000,
+        500000,
+        "image/mansion.webp"
+      ),
+      "Industrial Space": new Item(
+        "Industrial Space",
+        "realEstate",
+        10,
+        1000000000,
+        2200000,
+        "image/industrialSpace.webp"
+      ),
+      "Hotel Skyscraper": new Item(
+        "Hotel Skyscraper",
+        "realEstate",
+        5,
+        10000000000,
+        25000000,
+        "image/hotelSkyScraper.webp"
+      ),
+      "Bullet-Speed Sky Railway": new Item(
+        "Bullet-Speed Sky Railway",
+        "realEstate",
+        1,
+        10000000000000,
+        30000000,
+        "image/BulletSpeedSkyRailway.webp"
+      )
+    };
   }
 
   startGame() {
     this.uiManager = new UIManager(this.user);
     this.uiManager.setBurgerClickEvent();
+    this.uiManager.setButtonClickEvent();
     this.uiManager.displayDefaultBurgerCount();
     this.user.displayDefaultUserName();
     this.user.displayDefaultUserAge();
     this.user.displayDefaultDays();
     this.user.displayDefaultAssets();
-    this.uiManager.displayCanPurchaseItems(this.items);
-    this.timeManager = new TimeManager(this.user, this.uiManager, this.items);
+    this.uiManager.displayCanPurchaseItems(this.ITEMS);
+    this.timeManager = new TimeManager(this.user, this.uiManager, this.ITEMS);
     this.timeManager.startDayCycle();
+  }
+}
+
+class SaveManager{
+
+  constructor(user) {
+    this.user = user;
+  }
+
+  getSaveData() {
+    return {
+      name: this.user.name,
+      age: this.user.age,
+      days: this.user.days,
+      assets: this.user.assets,
+      assetsHeld: this.user.assetsHeld
+    };
+  }
+
+  saveData() {
+    localStorage.setItem("saveData", JSON.stringify(this.getSaveData()));
+  }
+  
+  loadSaveData() {
+    const saveData = JSON.parse(localStorage.getItem("saveData"));
+    this.user.name = saveData.name;
+    this.user.age = saveData.age;
+    this.user.days = saveData.days;
+    this.user.assets = saveData.assets;
+    this.user.assetsHeld = saveData.assetsHeld;
   }
 }
 

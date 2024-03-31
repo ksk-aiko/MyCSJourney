@@ -73,3 +73,8 @@ img {
     justify-content: center;
     align-items: center;
 }
+
+.icon-style:hover {
+    border: solid 1px rgb(5, 161, 230);
+    cursor: pointer;
+}
