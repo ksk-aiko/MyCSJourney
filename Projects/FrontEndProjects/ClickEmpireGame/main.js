@@ -44,12 +44,12 @@ class UIManager {
           <div class="row d-flex justify-content-around">
             <div class="col-8 d-flex flex-column justify-content-around">
                 <h1><strong>${itemIndex}</strong></h1>
-                <h3>Max purchase: ${items[itemIndex].maxPurchase}</h3>
+                <h3>Max purchase: ${items[itemIndex].maxPurchase == Infinity ? "♾️" : items[itemIndex].maxPurchase}</h3>
                 <h3>Price: $${items[itemIndex].price}</h3>
                 <h3>Get ${items[itemIndex].revenuePerSecond} extra yen per second </h3>
             </div>
             <div class="col-4 d-flex justify-content-center align-items-center">
-              <img class="img-large" src="image/house.webp">
+              <img class="img-large" src=${items[itemIndex].image}>
             </div>
           </div>
             <div class="row my-5">
@@ -119,15 +119,21 @@ class UIManager {
             return;
           }
           if (this.user.assets >= totalPurchasePrice) {
-            this.user.assets -= totalPurchasePrice;
-            this.user.updateAssets();
-            this.user.addAssetsHeld(itemIndex, purchaseNumber);
-            this.displayCanPurchaseItems(items);
-          } else {
-            alert("You don't have enough money!");
-          }
+              this.user.assets -= totalPurchasePrice;
+              this.user.updateAssets();
+              this.user.addAssetsHeld(itemIndex, purchaseNumber);
+              // 購入したアイテムが"ETF Stock"の場合、priceを10%上昇させる（これを購入数分繰り返す）
+              if (itemIndex == "ETF Stock") {
+                for (let i = 0; i < purchaseNumber; i++) {
+                  items[itemIndex].setPrice(parseInt(items[itemIndex].price * 1.1));
+                }
+              }
+              this.displayCanPurchaseItems(items);
+            } else {
+              alert("You don't have enough money!");
+            }
 
-          this.currentView = "itemList";
+            this.currentView = "itemList";
         });
       });
     });
@@ -292,10 +298,35 @@ class User {
     let totalRevenue = 0;
     // assetsHeldからkey(文字列として)とvalueを取り出す
     for (const [key, value] of Object.entries(this.assetsHeld)) {
-      totalRevenue += value * game.ITEMS[key].revenuePerSecond;
+      // keyが"ETF Stock"または"ETF Bonds"の場合、除外して計算する
+      if (key == "ETF Stock" || key == "ETF Bonds") {
+        continue;
+      }
+
+      totalRevenue += game.ITEMS[key].revenuePerSecond * value;
     }
     return totalRevenue;
   }
+
+  calculateETFassetsRevenuePerSecond() {
+    const ETF_STOCK_INTEREST_RATE = 0.001;
+    const ETF_BONDS_INTEREST_RATE = 0.0007;
+
+    let totalRevenue = 0;
+    let totalETFStock = 0;
+    let totalETFBonds = 0;
+
+    if (this.assetsHeld.hasOwnProperty("ETF Stock")) {
+      totalETFStock = game.ITEMS["ETF Stock"].price * this.assetsHeld["ETF Stock"];
+    }
+    if (this.assetsHeld.hasOwnProperty("ETF Bonds")) {
+      totalETFBonds = game.ITEMS["ETF Bonds"].price * this.assetsHeld["ETF Bonds"];
+    }
+    totalRevenue = totalETFStock * ETF_STOCK_INTEREST_RATE + totalETFBonds * ETF_BONDS_INTEREST_RATE;
+
+    return parseInt(totalRevenue);
+  }
+
 }
 
 class Item {
@@ -306,6 +337,11 @@ class Item {
     this.price = price;
     this.revenuePerSecond = revenuePerSecond;
     this.image = image;
+  }
+  
+  // priceを変更するメソッド
+  setPrice(price) {
+    this.price = price;
   }
 }
 
@@ -321,6 +357,8 @@ class TimeManager {
   startDayCycle() {
     setInterval(() => {
       this.user.assets += this.user.calculateAssetsRevenuePerSecond();
+      console.log(this.user.calculateETFassetsRevenuePerSecond());
+      this.user.assets += this.user.calculateETFassetsRevenuePerSecond();
       this.user.days++;
       // user.daysが365の倍数になったら、年齢を更新する
       if (this.user.days % 365 == 0) {
@@ -333,7 +371,7 @@ class TimeManager {
       } else {
         this.checkCanPurchaseItems();
       }
-    }, 15000);
+    }, 1500);
   }
 
   // itemsの中の各アイテムいづれかの価格を上回ったら、displayCanPurchaseItems()を呼び出す
@@ -429,7 +467,23 @@ class GameManager {
         10000000000000,
         30000000,
         "image/BulletSpeedSkyRailway.webp"
-      )
+      ),
+      "ETF Stock": new Item(
+        "ETF Stock",
+        "stock",
+        Infinity, 
+        300000,
+        "0.1% of total purchase price",
+        "image/ETFStock.webp"
+      ),
+      "ETF Bonds": new Item(
+        "ETF Bonds",
+        "stock",
+        Infinity, 
+        300000,
+        "0.07% of total purchase price",
+        "image/ETFBonds.webp"
+      ),
     };
   }
 
