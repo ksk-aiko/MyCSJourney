@@ -1,0 +1,25 @@
+@startuml
+actor Client
+participant "Server Admin" as Admin
+participant "UDP Server" as Server
+
+== Initialization ==
+Admin -> Server : Start Server
+
+== Connection Phase ==
+Client -> Server : Attempt Connection
+Server --> Client : Acknowledge Connection
+
+== Interaction Phase ==
+Client -> Server : Send Username
+Server --> Client : Confirm Username
+
+== Messaging ==
+Client -> Server : Send Message
+Server --> Client : Acknowledge Receipt
+
+loop Relay Process
+    Server -> Client : Relay Message to Other Clients
+end
+
+@enduml
