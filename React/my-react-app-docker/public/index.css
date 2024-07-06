@@ -71,3 +71,10 @@
     font-size: 14px; /* フォントサイズ */
     color: #666; /* テキスト色 */
 }
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
