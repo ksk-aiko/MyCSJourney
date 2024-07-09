@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 function ParentComponent() {
   const handleClick = () => {
@@ -147,23 +147,42 @@ function FruitCard(Props) {
   )
 }
 
-const App: React.FC = () => {
+function Counter() {
+  const [count, setCount] = useState(0);
   return (
     <div>
-      <h1>Fruit List</h1>
-      <div className="cards">
-        {
-          fruits.map((info) => (
-            <FruitCard
-              name={info.name}
-              Calorie={info.Calorie}
-              Macro={info.Macro}
-              imgUrl={info.imgUrl}
-            />
-          ))
-        }
-      </div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>increments</button>
+      <button onClick={() => setCount(count - 1)}>decrements</button>
     </div>
+  )
+}
+
+function Mycheckbox() {
+  const [liked, setLiked] = useState(true);
+  
+  function handleChange(e) {
+    setLiked(e.target.checked);
+  }
+
+  return (
+    <>
+      <label>
+        <input
+          type = "checkbox"
+          checked = {liked}
+          onChange = {handleChange}
+        />
+        I liked this.
+      </label>
+      <p>You {liked ? 'liked' : 'did not like'} this.</p>
+    </>
+  )
+}
+
+const App: React.FC = () => {
+  return (
+    <Mycheckbox />
   )
 };
 
